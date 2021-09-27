@@ -15,8 +15,6 @@ let audioContext = null;
 
 export function initAudio() {
     audioContext = new AudioContext();
-
-    console.log("Created Audio Context:", audioContext);
 }
 
 export function resumeAudio() {
@@ -26,6 +24,5 @@ export function resumeAudio() {
 }
 
 export function getAudioContext() {
-    console.log("Getting Audio Context:", audioContext);
     return audioContext;
 }
