@@ -2,11 +2,11 @@
  * Glue code for JAME
  */
 
-import { initAudio, getAudioContext } from "./libjame/Audio.js";
-import Port, {PORT_DIRECTIONS, PORT_TYPES} from "./libjame/Port.js";
-import AudioPlayerNode from "./libjame/nodes/AudioPlayerNode.js";
-import AudioOutputNode from "./libjame/nodes/AudioOutputNode.js";
-import FilterNode from "./libjame/nodes/FilterNode.js";
+import { initAudio, getAudioContext } from "./node_modules/libjame/src/Audio.js";
+import Port, {PORT_DIRECTIONS, PORT_TYPES} from "./node_modules/libjame/src/Port.js";
+import AudioPlayerNode from "./node_modules/libjame/src/nodes/AudioPlayerNode.js";
+import AudioOutputNode from "./node_modules/libjame/src/nodes/AudioOutputNode.js";
+import FilterNode from "./node_modules/libjame/src/nodes/FilterNode.js";
 
 initAudio();
 
