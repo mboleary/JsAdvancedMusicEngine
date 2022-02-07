@@ -2,7 +2,7 @@
  * Glue code for JAME
  */
 
-import { initAudio, getAudioContext } from "./node_modules/libjame/src/Audio.js";
+import { initAudio, getAudioContext, startScheduler } from "./node_modules/libjame/src/Audio.js";
 import Port, {PORT_DIRECTIONS, PORT_TYPES} from "./node_modules/libjame/src/Port.js";
 import AudioPlayerNode from "./node_modules/libjame/src/nodes/AudioPlayerNode.js";
 import AudioOutputNode from "./node_modules/libjame/src/nodes/AudioOutputNode.js";
@@ -55,4 +55,7 @@ document.body.appendChild(p);
 setInterval(() => {
     const ac = getAudioContext();
     p.innerText = ac.currentTime;
-}, 100);
+}, 250);
+
+// Run the loop
+startScheduler();
