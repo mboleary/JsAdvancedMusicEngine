@@ -33,3 +33,10 @@ window.ports.pause.update();
 window.ports.loop.update(true);
 window.ports.freq.update(440);
 ```
+
+## Known uses of this library
+
+Here is a list of websites or applications that use this library. If you decide to use it somewhere, open up a PR and add it to the list in this file.
+
+- [BOrk - The Browser Orchestra](https://github.com/mboleary/BOrk)
+    - [Demo at ](https://bork.deadcomputersociety.com/)
