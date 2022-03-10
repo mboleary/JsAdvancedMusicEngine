@@ -42,8 +42,8 @@ export default class AudioPlayerNode extends Node {
 
         // Trigger Ports In
         ports.push(new Port("start", this, PORT_TYPES.TRIGGER, () => this._play(), null, PORT_DIRECTIONS.IN, "Start playback", null, null));
-        ports.push(new Port("stop", this, PORT_TYPES.TRIGGER, () => this._stop(), null, PORT_DIRECTIONS.IN, "Start playback", null, null));
-        ports.push(new Port("pause", this, PORT_TYPES.TRIGGER, () => this._pause(), null, PORT_DIRECTIONS.IN, "Start playback", null, null));
+        ports.push(new Port("stop", this, PORT_TYPES.TRIGGER, () => this._stop(), null, PORT_DIRECTIONS.IN, "Stop playback", null, null));
+        ports.push(new Port("pause", this, PORT_TYPES.TRIGGER, () => this._pause(), null, PORT_DIRECTIONS.IN, "Pause playback", null, null));
 
         this.ports = buildPortObj(ports, this.id);
     }

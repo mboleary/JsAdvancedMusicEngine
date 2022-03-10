@@ -101,6 +101,7 @@ export default class Port {
 
     disconnectAll () {
         for (let i = 0; i < this.connectedTo.length; i++) {
+            const port = this.connectedTo[i];
             port._onDisconnect(this);
             if (port.onDisconnect) {
                 port.onDisconnect();

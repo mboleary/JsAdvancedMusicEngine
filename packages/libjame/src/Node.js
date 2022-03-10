@@ -7,8 +7,8 @@ let nodeIDCounter = 1;
 export default class Node {
     constructor(params = {}) {
         this.id = params.id || nodeIDCounter++; // Should be unique
-        this.name = "";
-        this.ports = [];
+        this.name = params.name || "";
+        this.ports = {};
         this.audioNode = null;
     }
 
@@ -17,6 +17,6 @@ export default class Node {
     }
 
     onDestroy () {
-
+        // @TODO disconnect all ports
     }
 }
