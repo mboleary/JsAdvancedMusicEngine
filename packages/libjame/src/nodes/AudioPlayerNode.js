@@ -4,6 +4,8 @@ import { getAudioContext, resumeAudio } from "../Audio.js";
 
 import {registerNodeType} from "../persistence/Serializer.js";
 
+const TYPE = "AudioPlayerNode";
+
 /**
  * Node for basic audio playback
  */
@@ -15,12 +17,14 @@ export default class AudioPlayerNode extends Node {
         };
         super(params, defaults);
 
+        this._type = TYPE;
+
         // Create Audio Element
         const audioContext = getAudioContext();
         this._audio = new Audio(this.params.sourceURL);
         this._track = audioContext.createMediaElementSource(this._audio);
 
-        // Audio Ports
+        // Audio Port Out
         this._addPort({
             id: "aud",
             type: PORT_TYPES.AUDIO,
@@ -28,6 +32,8 @@ export default class AudioPlayerNode extends Node {
             direction: PORT_DIRECTIONS.OUT,
             name: "Audio Out"
         });
+
+        // @TODO add event listeners for audio element events
 
         // Param Ports In
         this._addPort({id:"loop", type: PORT_TYPES.PARAM, defaultValue: false, direction: PORT_DIRECTIONS.IN, name: "Loop"});
@@ -56,6 +62,14 @@ export default class AudioPlayerNode extends Node {
         this._audio.currentTime = 0;
     }
 
+    _onParamUpdate (params, field, value) {
+        if (field === "sourceURL") {
+            this._audio.pause();
+            this._audio.url = value;
+            this._audio.currentTime = 0;
+        }
+    }
+
     _onPortUpdate (field, value) {
         console.log("handle update:", field, value);
         switch (field) {
@@ -75,4 +89,4 @@ export default class AudioPlayerNode extends Node {
     }
 }
 
-registerNodeType(AudioPlayerNode, "AudioPlayerNode");
+registerNodeType(AudioPlayerNode, TYPE);

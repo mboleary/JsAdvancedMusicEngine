@@ -63,13 +63,13 @@ export default class Node {
         return [].concat(this.#portsArr);
     }
 
-    _addPort({id, type, control, defaultValue, direction, name, onConnect = null, onDisconnect = null, onUpdate = null}) {
+    _addPort({id, type, control, defaultValue, direction, name, onConnect = null, onDisconnect = null, onUpdate = null, _preventAutoConnect = false}) {
         let handleConnect = null;
         let handleDisconnect = null;
         let handleUpdate = null;
 
         // Get a default function for connection, disconnection, and update callbacks
-        if (direction === PORT_DIRECTIONS.IN) {
+        if (direction === PORT_DIRECTIONS.IN && !_preventAutoConnect) {
             if (type === PORT_TYPES.PARAM) {
                 handleUpdate = (value) => {
                     this._onParamUpdate(id, value);
