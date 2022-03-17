@@ -13,7 +13,7 @@ export default class Node {
     ports; // Ports Object exposed to the world
     audioNode; // If node contains an audioNode
     #portsArr;
-    constructor({id, name, ...params} = {}) {
+    constructor({id, name, ...params} = {}, defaultParamValues = {}) {
         this.#id = id || nodeIDCounter++; // Should be unique
         this._type = "Node";
         this.name = name || "";
@@ -22,7 +22,9 @@ export default class Node {
         this.audioNode = null;
         // Stores the parameters that define the node
         const updateFunc = (...args) => this._onParamUpdate(...args);
-        this.params = new Proxy(params, {
+        const p = {};
+        Object.assign(p, defaultParamValues, params);
+        this.params = new Proxy(p, {
             set(obj, prop, value) {
                 // Call the parameter update function before actually updating
                 updateFunc(obj, prop, value);

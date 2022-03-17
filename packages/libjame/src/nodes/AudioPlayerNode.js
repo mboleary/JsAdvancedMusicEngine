@@ -2,50 +2,43 @@ import Node from "../Node.js";
 import Port, {PORT_DIRECTIONS, PORT_TYPES, buildPortObj} from "../Port.js";
 import { getAudioContext, resumeAudio } from "../Audio.js";
 
+import {registerNodeType} from "../persistence/Serializer.js";
 
+/**
+ * Node for basic audio playback
+ */
 
 export default class AudioPlayerNode extends Node {
     constructor(params) {
-        super(params);
-
-        this.sourceURL = params.sourceURL;
-        this.playbackRate = params.defaultPlaybackRate || 1;
-        this.mute = params.defaultMute || false;
-        this.volume = params.defaultVolume || 1;
-        this.loop = params.loop || false;
-
-        // Track Tempo, length, and key
-        this.tempo = params.tempo;
-        this.keySig = params.keySig || null;
-        this.timeNum = params.timeNum;
-        this.timeDenom = params.timeDenom;
+        const defaults = {
+            sourceURL: "",
+        };
+        super(params, defaults);
 
         // Create Audio Element
         const audioContext = getAudioContext();
-        this._audio = new Audio(this.sourceURL);
+        this._audio = new Audio(this.params.sourceURL);
         this._track = audioContext.createMediaElementSource(this._audio);
 
-        // Create Interface ports
-        let ports = [];
-
-        // Audio ports
-        ports.push(new Port("aud", this, PORT_TYPES.AUDIO, this._track, null, PORT_DIRECTIONS.OUT, "Audio Out"));
+        // Audio Ports
+        this._addPort({
+            id: "aud",
+            type: PORT_TYPES.AUDIO,
+            control: this._track,
+            direction: PORT_DIRECTIONS.OUT,
+            name: "Audio Out"
+        });
 
         // Param Ports In
-        ports.push(new Port("loop", this, PORT_TYPES.PARAM, null, false, PORT_DIRECTIONS.IN, "Loop", null, null, (value) => this.onUpdate("loop", value)));
-        ports.push(new Port("rate", this, PORT_TYPES.PARAM, null, false, PORT_DIRECTIONS.IN, "Playback Rate", null, null, (value) => this.onUpdate("playbackRate", value)));
-        ports.push(new Port("mute", this, PORT_TYPES.PARAM, null, false, PORT_DIRECTIONS.IN, "Mute", null, null, (value) => this.onUpdate("mute", value)));
-        ports.push(new Port("volume", this, PORT_TYPES.PARAM, null, 1, PORT_DIRECTIONS.IN, "Volume", null, null, (value) => this.onUpdate("volume", value)));
-
-        // Param ports out
-        ports.push(new Port("tempo", this, PORT_TYPES.PARAM, null, params.tempo, PORT_DIRECTIONS.OUT, "Tempo", null, null));
+        this._addPort({id:"loop", type: PORT_TYPES.PARAM, defaultValue: false, direction: PORT_DIRECTIONS.IN, name: "Loop"});
+        this._addPort({id:"rate", type: PORT_TYPES.PARAM, defaultValue: false, direction: PORT_DIRECTIONS.IN, name: "Playback Rate"});
+        this._addPort({id:"mute", type: PORT_TYPES.PARAM, defaultValue: false, direction: PORT_DIRECTIONS.IN, name: "Mute"});
+        this._addPort({id:"volume", type: PORT_TYPES.PARAM, defaultValue: 1, direction: PORT_DIRECTIONS.IN, name: "Volume"});
 
         // Trigger Ports In
-        ports.push(new Port("start", this, PORT_TYPES.TRIGGER, () => this._play(), null, PORT_DIRECTIONS.IN, "Start playback", null, null));
-        ports.push(new Port("stop", this, PORT_TYPES.TRIGGER, () => this._stop(), null, PORT_DIRECTIONS.IN, "Stop playback", null, null));
-        ports.push(new Port("pause", this, PORT_TYPES.TRIGGER, () => this._pause(), null, PORT_DIRECTIONS.IN, "Pause playback", null, null));
-
-        this.ports = buildPortObj(ports, this.id);
+        this._addPort({id:"start", type: PORT_TYPES.TRIGGER, control: () => this._play(), direction: PORT_DIRECTIONS.IN, name: "Start playback"});
+        this._addPort({id:"stop", type: PORT_TYPES.TRIGGER, control: () => this._stop(), direction: PORT_DIRECTIONS.IN, name: "Stop playback"});
+        this._addPort({id:"pause", type: PORT_TYPES.TRIGGER, control: () => this._pause(), direction: PORT_DIRECTIONS.IN, name: "Pause playback"});
     }
 
     _play() {
@@ -63,7 +56,7 @@ export default class AudioPlayerNode extends Node {
         this._audio.currentTime = 0;
     }
 
-    onUpdate (field, value) {
+    _onPortUpdate (field, value) {
         console.log("handle update:", field, value);
         switch (field) {
             case "loop":
@@ -81,3 +74,5 @@ export default class AudioPlayerNode extends Node {
         }
     }
 }
+
+registerNodeType(AudioPlayerNode, "AudioPlayerNode");
