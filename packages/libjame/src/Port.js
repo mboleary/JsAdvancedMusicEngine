@@ -18,7 +18,7 @@ export function buildPortObj (ports, nodeId) {
 
     for (const p of ports) {
         let d = p.direction === PORT_DIRECTIONS.IN ? "in" : "out";
-        let id = p.id.replace(nodeId + "_", "");
+        let id = p.id;
         toRet[d][id] = p;
     }
     
@@ -36,11 +36,12 @@ export default class Port {
     constructor(id, node, type, control, defaultValue, direction, name, onConnect = noop, onDisconnect = noop, onUpdate = noop) {
         this.name = name || id;
         this.node = node;
-        if (this.node && this.node.id) {
-            this.id = this.node.id + "_" + id; // Should be unique
-        } else {
-            this.id = id; // Should be unique
-        }
+        // if (this.node && this.node.id) {
+        //     this.id = this.node.id + "_" + id; // Should be unique
+        // } else {
+        //     this.id = id; // Should be unique
+        // }
+        this.id = id; // Should be unique for a single node with direction
         this.type = type;
         this.control = control;
         this.direction = direction;

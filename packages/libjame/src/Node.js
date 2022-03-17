@@ -2,23 +2,23 @@
  * Generic Node class
  */
 
-import Port, {PORT_TYPES, PORT_DIRECTIONS, buildPortObj} from "./Port";
+import Port, {PORT_TYPES, PORT_DIRECTIONS, buildPortObj} from "./Port.js";
 
 let nodeIDCounter = 1;
 
 export default class Node {
     #id; // Contains the id
-    #type; // Contains the Type String used for serialization
+    _type; // Contains the Type String used for serialization
     name; // Programmer-set name of the node
     ports; // Ports Object exposed to the world
     audioNode; // If node contains an audioNode
     #portsArr;
-    constructor({id, name, ...params}) {
+    constructor({id, name, ...params} = {}) {
         this.#id = id || nodeIDCounter++; // Should be unique
-        this.#type = "Node";
+        this._type = "Node";
         this.name = name || "";
         this.ports = {}; // Contains the Port object exposed to the world
-        this.portsArr = [];
+        this.#portsArr = [];
         this.audioNode = null;
         // Stores the parameters that define the node
         const updateFunc = (...args) => this._onParamUpdate(...args);
@@ -37,7 +37,7 @@ export default class Node {
     }
 
     get type() {
-        return this.#type;
+        return this._type;
     }
 
     /**
@@ -109,8 +109,9 @@ export default class Node {
     _removePort(id, direction) {
         // Find in ports arr and delete, then rebuild port object
         for (let i = 0; i < this.#portsArr.length; i++) {
-            if (this.#portsArr[i].id === id && this.#ports[i].direction === direction) {
-                this.#portsArr[i].disconnectAll();
+            const port = this.#portsArr[i];
+            if (port && port.id === id && port.direction === direction) {
+                port.disconnectAll();
                 this.#portsArr.splice(i, 1);
                 break;
             }
