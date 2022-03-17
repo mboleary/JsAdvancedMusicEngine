@@ -12,7 +12,7 @@ export default class Environment {
 
     constructor() {
         this.#nodes = new Map();
-        this.#edges = [];
+        // this.#edges = [];
         this.#ports = {};
         this.#portsArr = [];
         this.#groups = {};

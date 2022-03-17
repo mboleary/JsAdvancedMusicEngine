@@ -11,23 +11,32 @@ export default class AudioOutputNode extends Node {
     constructor(params) {
         super(params);
 
+        this._type = "AudioOutputNode";
+
         // Create Interface ports
-        let ports = [];
+        // let ports = [];
 
         // Audio port in
-        ports.push(new Port("aud", this, PORT_TYPES.AUDIO, null, null, PORT_DIRECTIONS.IN, "Audio In", (p) => this._connect(p), (p) => this._disconnect(p)));
+        // ports.push(new Port("aud", this, PORT_TYPES.AUDIO, null, null, PORT_DIRECTIONS.IN, "Audio In", (p) => this._connect(p), (p) => this._disconnect(p)));
 
-        this.ports = buildPortObj(ports, this.id);
+        // this.ports = buildPortObj(ports, this.id);
+
+        this._addPort({
+            id: "aud",
+            type: PORT_TYPES.AUDIO,
+            direction: PORT_DIRECTIONS.IN,
+            name: "Audio In"
+        });
     }
 
-    _connect(port) {
+    _onAudioPortConnect(port) {
         if (port.control && port.control instanceof AudioNode) {
             const audioContext = getAudioContext();
             port.control.connect(audioContext.destination);
         }
     }
 
-    _disconnect(port) {
+    _onAudioPortDisconnect(port) {
         if (port.control && port.control instanceof AudioNode) {
             const audioContext = getAudioContext();
             port.control.disconnect(audioContext.destination);
