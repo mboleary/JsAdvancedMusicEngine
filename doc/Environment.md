@@ -16,7 +16,7 @@ There are a few things we'll need to solve when using libjame:
 - Allow grouping nodes and loading things using groups
     - This should allow a user to load nodes into the root surface and also unload just those nodes (this is similar to how JSGE works I think)
 - Provide a robust edge to expose some ports on
-    - this could be used to also provide a node group that contians several nodes and provides ports on the edge of the container node
+    - this could be used to also provide a node group that contains several nodes and provides ports on the edge of the container node
 - Updating node constructor parameters
     - some params, like IDs, should not be allowed to be changed
 
@@ -30,3 +30,10 @@ I suppose someone could use more than one environment, but that shouldn't be nec
 
 For loading in groups, it might be nice to enable serializing into a container node.
 
+### Dehydration
+
+When dehydrating the nodes, we only really need to keep the parameters passed into the node constructor, which should put the node back into the same state when instantiated with the same values.
+
+### Hydration
+
+When hydrating the nodes again, we'll need to find the constructor for the given node type, and reconnect the nodes

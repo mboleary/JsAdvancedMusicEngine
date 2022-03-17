@@ -24,6 +24,8 @@ export function buildPortObj (ports, nodeId) {
     
     console.log(toRet);
 
+    Object.freeze(toRet); // prevent rouge code from changing port object
+
     return toRet;
 }
 
