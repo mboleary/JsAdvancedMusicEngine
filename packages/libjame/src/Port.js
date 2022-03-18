@@ -21,8 +21,6 @@ export function buildPortObj (ports, nodeId) {
         let id = p.id;
         toRet[d][id] = p;
     }
-    
-    console.log(toRet);
 
     Object.freeze(toRet); // prevent rouge code from changing port object
 
@@ -33,7 +31,7 @@ export function buildPortObj (ports, nodeId) {
  * A port is used to connect a node to another
  */
 export default class Port {
-    constructor(id, node, type, control, defaultValue, direction, name, onConnect = noop, onDisconnect = noop, onUpdate = noop) {
+    constructor({id, node, type, control, defaultValue, direction, name, onConnect, onDisconnect, onUpdate}) {
         this.name = name || id;
         this.node = node;
         // if (this.node && this.node.id) {
@@ -47,9 +45,9 @@ export default class Port {
         this.direction = direction;
         this.currentValue = defaultValue;
         this.connectedTo = [];
-        this.onConnect = onConnect;
-        this.onDisconnect = onDisconnect;
-        this.onUpdate = onUpdate;
+        this.onConnect = onConnect || noop;
+        this.onDisconnect = onDisconnect || noop;
+        this.onUpdate = onUpdate || noop;
     }
 
     // Call this to connect the port

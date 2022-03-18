@@ -23,6 +23,7 @@ export default class AudioOutputNode extends Node {
     }
 
     _onAudioPortConnect(port) {
+        console.log("Port connection in AudioOutputNode");
         if (port.control && port.control instanceof AudioNode) {
             const audioContext = getAudioContext();
             port.control.connect(audioContext.destination);

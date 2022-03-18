@@ -57,28 +57,32 @@ export default class FilterNode extends Node {
             type: PORT_TYPES.PARAM, 
             control: this._filter.frequency, 
             direction: PORT_DIRECTIONS.IN,
-            name: "Frequency"
+            name: "Frequency",
+            _preventAutoConnect: true
         });
         this._addPort({
             id: "detune", 
             type: PORT_TYPES.PARAM, 
             control: this._filter.detune, 
             direction: PORT_DIRECTIONS.IN, 
-            name: "Detune"
+            name: "Detune",
+            _preventAutoConnect: true
         });
         this._addPort({
             id: "q", 
             type: PORT_TYPES.PARAM, 
             control: this._filter.Q, 
             direction: PORT_DIRECTIONS.IN, 
-            name: "Q"
+            name: "Q",
+            _preventAutoConnect: true
         });
         this._addPort({
             id: "gain", 
             type: PORT_TYPES.PARAM, 
             control: this._filter.gain, 
             direction: PORT_DIRECTIONS.IN, 
-            name: "Gain"
+            name: "Gain",
+            _preventAutoConnect: true
         });
         this._addPort({
             id: "type", 

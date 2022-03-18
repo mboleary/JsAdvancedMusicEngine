@@ -35,11 +35,38 @@ window.nodes = [aon, apn, fn];
 
 window.ports = {};
 
-window.ports.start = new Port("demo_start", null, PORT_TYPES.TRIGGER, null, null, PORT_DIRECTIONS.OUT, "Start Playback");
-window.ports.stop = new Port("demo_stop", null, PORT_TYPES.TRIGGER, null, null, PORT_DIRECTIONS.OUT, "Stop Playback");
-window.ports.pause = new Port("demo_pause", null, PORT_TYPES.TRIGGER, null, null, PORT_DIRECTIONS.OUT, "Pause Playback");
-window.ports.loop = new Port("demo_loop", null, PORT_TYPES.PARAM, null, true, PORT_DIRECTIONS.OUT, "Loop");
-window.ports.freq = new Port("demo_freq", null, PORT_TYPES.PARAM, null, 1000, PORT_DIRECTIONS.OUT, "Frequency");
+window.ports.start = new Port({
+    id: "demo_start", 
+    type: PORT_TYPES.TRIGGER, 
+    direction: PORT_DIRECTIONS.OUT, 
+    name: "Start Playback"
+});
+window.ports.stop = new Port({
+    id: "demo_stop", 
+    type: PORT_TYPES.TRIGGER, 
+    direction: PORT_DIRECTIONS.OUT, 
+    name: "Stop Playback"
+});
+window.ports.pause = new Port({
+    id: "demo_pause",
+    type: PORT_TYPES.TRIGGER, 
+    direction: PORT_DIRECTIONS.OUT, 
+    name: "Pause Playback"
+});
+window.ports.loop = new Port({
+    id: "demo_loop", 
+    type: PORT_TYPES.PARAM, 
+    defaultValue: true, 
+    direction: PORT_DIRECTIONS.OUT, 
+    name: "Loop"
+});
+window.ports.freq = new Port({
+    id: "demo_freq",
+    type: PORT_TYPES.PARAM,
+    defaultValue: 1000, 
+    direction: PORT_DIRECTIONS.OUT, 
+    name: "Frequency"
+});
 
 window.ports.start.connect(apn.ports.in.start);
 // window.ports.start.connect(apn2.ports.in.start);

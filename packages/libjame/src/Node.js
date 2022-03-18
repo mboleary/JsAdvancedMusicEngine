@@ -102,7 +102,18 @@ export default class Node {
             handleUpdate = onUpdate;
         }
 
-        let port = new Port(id, this, type, control, defaultValue, direction, name, handleConnect, handleDisconnect, handleUpdate);
+        let port = new Port({
+            id, 
+            node: this, 
+            type, 
+            control, 
+            defaultValue, 
+            direction, 
+            name, 
+            onConnect: handleConnect, 
+            onDisconnect: handleDisconnect, 
+            onUpdate: handleUpdate
+        });
 
         this.#portsArr.push(port);
         this.ports = buildPortObj(this.#portsArr, this.#id);

@@ -63,6 +63,7 @@ export default class AudioPlayerNode extends Node {
     }
 
     _onParamUpdate (params, field, value) {
+        console.log("Param Update:", field, value);
         if (field === "sourceURL") {
             this._audio.pause();
             this._audio.url = value;
