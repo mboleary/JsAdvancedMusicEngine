@@ -52,12 +52,21 @@ export default class Node {
 
     }
 
-    _onDestroy () {
+    onDestroy () {
         // disconnect all ports
         for (const port of this.#portsArr) {
             port.disconnectAll();
         }
+
+        if (this._onDestroy) {
+            this._onDestroy();
+        }
     }
+
+    /**
+     * Override this function if things need to happen when destroying a node
+     */
+    _onDestroy() {}
 
     getPortsArr() {
         return [].concat(this.#portsArr);

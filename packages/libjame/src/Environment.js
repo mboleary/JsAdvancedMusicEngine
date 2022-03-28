@@ -3,6 +3,7 @@
  */
 
 import {buildPortObj} from "./Port.js";
+import {serialize as _serialize, deserialize as _deserialize} from "./persistence/Serializer.js";
 
 export default class Environment {
     #nodes;
@@ -13,7 +14,10 @@ export default class Environment {
     constructor() {
         this.#nodes = new Map();
         // this.#edges = [];
-        this.#ports = {};
+        this.#ports = {
+            in: {}, 
+            out: {}
+        };
         this.#portsArr = [];
         this.#groups = {};
     }
@@ -28,6 +32,11 @@ export default class Environment {
         return this.#nodes.get(id);
     }
 
+    /**
+     * Adds a node to the environment
+     * @param {Node} node node to add
+     * @param {null | String} group group to add the node to
+     */
     addNode(node, group = null) {
         if (group) {
             node.__group = group;
@@ -37,12 +46,24 @@ export default class Environment {
         this.#nodes.set(node.id, node);
     }
 
+    /**
+     * @TODO Implement function
+     * Changes the group of the node by ID
+     * @param {*} id 
+     * @param {*} group 
+     */
     setNodeGroup(id, group = null) {
         // @TODO get node, remove from old group if it was added, then add to new group
     }
 
+    /**
+     * Removes a node by ID
+     * @param {String | Number} id ID of node to remove
+     */
     removeNode(id) {
         // @TODO call node removal function
+        const node = this.#nodes.get(id);
+        node.onDestroy();
         this.#nodes.delete(id);
     }
 
@@ -57,6 +78,10 @@ export default class Environment {
         this.#ports = obj;
     }
 
+    /**
+     * Removes an edge port
+     * @param {String} id ID of port to remove
+     */
     removePort(id) {
         for (let i = 0; i < this.#portsArr.length; i++) {
             if (this.#portsArr[i].id === id) {
@@ -68,7 +93,48 @@ export default class Environment {
         this.#ports = buildPortObj(this.#portsArr, null);
     }
 
+    /**
+     * Gets the ports object
+     * @returns object with ports
+     */
     getPorts() {
         return this.#ports;
+    }
+
+    getNodes() {
+        return this.#nodes.values();
+    }
+
+    /**
+     * Serialize the state of the Environment for loading later
+     * @returns {Object} the serialized state
+     */
+    serialize() {
+        return _serialize(this.#nodes.values(), this.#ports);
+    }
+
+    /**
+     * Loads a serialized state
+     * @param {Object} obj state to load
+     * @param {Object} options Options for loading
+     */
+    deserialize(json, {replaceAll = false, group = null, ...options} = {}) {
+        const obj = _deserialize(json, options);
+        if (replaceAll = false) {
+            const nodes = this.#nodes.values();
+            for (const node of nodes) {
+                this.removeNode(node.id);
+            }
+            for (const oldPort of this.#portsArr) {
+                oldPort.disconnectAll();
+            }
+            this.#portsArr = obj.extraPorts;
+        } else {
+            this.#portsArr = this.#portsArr.concat(obj.extraPorts);
+        }
+        for (const node of obj.nodes) {
+            this.addNode(node, group);
+        }
+        this.#ports = buildPortObj(this.#portsArr, null);
     }
 };

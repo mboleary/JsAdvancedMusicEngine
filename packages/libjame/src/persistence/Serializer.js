@@ -42,6 +42,7 @@ export function serialize(nodes, rootPortsObj = null) {
     }
 
     if (rootPortsObj) {
+        console.log(rootPortsObj);
         // Get output nodes of the root Ports Object
         for (const port of Object.keys(rootPortsObj.out)) {
             toRet.extraPorts.push({
@@ -76,10 +77,10 @@ export function registerNodeType(constructor, typeName) {
     nodeTypes[typeName] = constructor;
 }
 
-export function deserialize(json, {ignoreMissingNodeTypes = true, group = null, containerNode = false}) {
+export function deserialize(json, {ignoreMissingNodeTypes = true, containerNode = false}) {
     const toRet = {
         nodes: [],
-        edges: [],
+        // edges: [],
         extraPorts: []
     };
 

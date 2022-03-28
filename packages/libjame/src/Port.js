@@ -31,7 +31,7 @@ export function buildPortObj (ports, nodeId) {
  * A port is used to connect a node to another
  */
 export default class Port {
-    constructor({id, node, type, control, defaultValue, direction, name, onConnect, onDisconnect, onUpdate}) {
+    constructor({id, node, type, control, defaultValue, direction, name, onConnect, onDisconnect, onUpdate, minValue, maxValue}) {
         this.name = name || id;
         this.node = node;
         // if (this.node && this.node.id) {
@@ -44,6 +44,8 @@ export default class Port {
         this.control = control;
         this.direction = direction;
         this.currentValue = defaultValue;
+        this._maxValue = maxValue || null;
+        this._minValue = minValue || null;
         this.connectedTo = [];
         this.onConnect = onConnect || noop;
         this.onDisconnect = onDisconnect || noop;
@@ -63,7 +65,8 @@ export default class Port {
 
         // Check if we already have the port
         for (const p of this.connectedTo) {
-            if (p.id === port.id) {
+            if (p.id === port.id && (p.node && port.node && p.node.id === port.node.id)) {
+                console.log("ids:", p, port);
                 throw new Error("Already connected");
             }
         }
@@ -124,6 +127,26 @@ export default class Port {
                 this._updateSingle(port, value, time);
             }
         }
+    }
+
+    getMaxValue() {
+        if (this.type === PORT_TYPES.PARAM) {
+            if (this.control instanceof AudioParam) {
+                return this.control.maxValue;
+            }
+            return this._maxValue;
+        }
+        return null;
+    }
+
+    getMinValue() {
+        if (this.type === PORT_TYPES.PARAM) {
+            if (this.control instanceof AudioParam) {
+                return this.control.minValue;
+            }
+            return this._minValue;
+        }
+        return null;
     }
 
     _updateSingle (port, value, time) {
